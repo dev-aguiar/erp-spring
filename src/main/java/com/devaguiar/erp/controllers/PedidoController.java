@@ -1,9 +1,11 @@
 package com.devaguiar.erp.controllers;
 
+import com.devaguiar.erp.dtos.requests.AdicionarProdutoPedidoRequestDTO;
 import com.devaguiar.erp.dtos.requests.PedidoRequestDTO;
 import com.devaguiar.erp.dtos.responses.PedidoResponseDTO;
 import com.devaguiar.erp.services.PedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,6 +31,13 @@ public class PedidoController {
     @PutMapping("/{id}")
     public PedidoRequestDTO updatePedido(@PathVariable Long id, @RequestBody PedidoRequestDTO data) {
         return pedidoService.updatePedido(id, data);
+    }
+
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    @PostMapping("/adicionar-produto")
+    public ResponseEntity<String> adicionarProdutoAoPedido(@RequestBody AdicionarProdutoPedidoRequestDTO data) {
+        pedidoService.adicionarProdutoAoPedido(data);
+        return ResponseEntity.ok("Produto adicionado ao pedido com sucesso!");
     }
 
     @CrossOrigin(origins = "*", allowedHeaders = "*")

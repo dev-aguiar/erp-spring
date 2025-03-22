@@ -1,12 +1,13 @@
 package com.devaguiar.erp.services;
 
+import com.devaguiar.erp.dtos.requests.AdicionarProdutoPedidoRequestDTO;
 import com.devaguiar.erp.dtos.requests.PedidoRequestDTO;
 import com.devaguiar.erp.dtos.responses.PedidoResponseDTO;
 import com.devaguiar.erp.entities.Cliente;
+import com.devaguiar.erp.entities.ItemPedido;
 import com.devaguiar.erp.entities.Pedido;
-import com.devaguiar.erp.repositories.ClienteRepository;
-import com.devaguiar.erp.repositories.PedidoRepository;
-import com.devaguiar.erp.repositories.VendedorRepository;
+import com.devaguiar.erp.entities.Produto;
+import com.devaguiar.erp.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,15 +18,19 @@ import java.util.List;
 public class PedidoService {
 
     private final PedidoRepository pedidoRepository;
+    private final ProdutoRepository produtoRepository;
     private final ClienteRepository clienteRepository;
     private final VendedorRepository vendedorRepository;
+    private final ItemPedidoRepository itemPedidoRepository;
 
 
     @Autowired
-    public PedidoService(PedidoRepository pedidoRepository, ClienteRepository clienteRepository, VendedorRepository vendedorRepository) {
+    public PedidoService(PedidoRepository pedidoRepository, ProdutoRepository produtoRepository, ClienteRepository clienteRepository, VendedorRepository vendedorRepository, ItemPedidoRepository itemPedidoRepository) {
         this.pedidoRepository = pedidoRepository;
+        this.produtoRepository = produtoRepository;
         this.clienteRepository = clienteRepository;
         this.vendedorRepository = vendedorRepository;
+        this.itemPedidoRepository = itemPedidoRepository;
     }
 
     public PedidoRequestDTO createPedido(@RequestBody PedidoRequestDTO data) {
@@ -41,6 +46,15 @@ public class PedidoService {
         pedido.setStatusPedido(data.statusPedido());
         pedidoRepository.save(pedido);
         return data;
+    }
+
+    public void adicionarProdutoAoPedido(AdicionarProdutoPedidoRequestDTO data) {
+        Pedido pedido = pedidoRepository.findById(data.pedidoId())
+                .orElseThrow(() -> new IllegalArgumentException("Pedido não encontrado"));
+        Produto produto = produtoRepository.findById(data.produtoId())
+                .orElseThrow(() -> new IllegalArgumentException("Produto não encontrado"));
+        ItemPedido itemPedido = new ItemPedido(pedido, produto, data.quantidade());
+        itemPedidoRepository.save(itemPedido);
     }
 
     public void deletePedido(Long id) {

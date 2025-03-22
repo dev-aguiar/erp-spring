@@ -1,6 +1,5 @@
 package com.devaguiar.erp.entities;
 
-import com.devaguiar.erp.dtos.requests.ItemPedidoRequestDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,4 +19,10 @@ public class ItemPedido {
     private Produto produto;
     private Integer quantidade;
     private Double valorUnitario;
+
+    public ItemPedido(Pedido pedido, Produto produto, int quantidade) {
+        this.pedido = pedido;
+        this.produto = produto;
+        this.quantidade = quantidade;
+    }
 }
