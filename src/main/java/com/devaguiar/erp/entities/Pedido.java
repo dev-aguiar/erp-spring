@@ -10,7 +10,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.List;
 
 @Entity
@@ -43,6 +42,7 @@ public class Pedido {
                 .orElseThrow(() -> new IllegalArgumentException("Vendedor não encontrado"));
         this.dataPedido = data.dataPedido();
         this.statusPedido = data.statusPedido();
+        this.formaPagamento = data.formaPagamento();
     }
 
     public List<ClienteResumidoDTO> getClienteResumido() {
