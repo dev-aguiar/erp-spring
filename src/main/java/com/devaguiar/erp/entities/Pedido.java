@@ -45,7 +45,7 @@ public class Pedido {
         this.formaPagamento = data.formaPagamento();
     }
 
-    public List<ClienteResumidoDTO> getClienteResumido() {
-        return List.of(new ClienteResumidoDTO(cliente.getId(), cliente.getNome()));
+    public ClienteResumidoDTO obterClienteResumido() {
+        return new ClienteResumidoDTO(cliente.getId(), cliente.getNome());
     }
 }
