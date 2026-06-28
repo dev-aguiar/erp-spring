@@ -5,7 +5,9 @@ import com.devaguiar.erp.dtos.responses.ProdutoResponseDTO;
 import com.devaguiar.erp.entities.Produto;
 import com.devaguiar.erp.repositories.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -19,24 +21,27 @@ public class ProdutoService {
         this.produtoRepository = produtoRepository;
     }
 
-    public ProdutoRequestDTO createProduto(ProdutoRequestDTO data) {
+    public ProdutoResponseDTO createProduto(ProdutoRequestDTO data) {
         Produto produto = new Produto(data);
         produtoRepository.save(produto);
-        return data;
+        return new ProdutoResponseDTO(produto);
     }
 
-    public ProdutoRequestDTO updateProduto(Long id, ProdutoRequestDTO data) {
+    public ProdutoResponseDTO updateProduto(Long id, ProdutoRequestDTO data) {
         Produto produto = produtoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Produto não encontrado!"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado!"));
 
         produto.setNome(data.nome());
         produto.setPreco(data.preco());
         produto.setQuantidade(data.quantidade());
         produtoRepository.save(produto);
-        return data;
+        return new ProdutoResponseDTO(produto);
     }
 
     public void deleteProduto(Long id) {
+        if (!produtoRepository.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado!");
+        }
         produtoRepository.deleteById(id);
     }
 
@@ -47,7 +52,8 @@ public class ProdutoService {
     }
 
     public ProdutoResponseDTO findById(Long id) {
-        Produto result = produtoRepository.findById(id).get();
+        Produto result = produtoRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado!"));
         return new ProdutoResponseDTO(result);
     }
 }

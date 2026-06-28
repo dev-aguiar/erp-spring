@@ -4,6 +4,7 @@ import com.devaguiar.erp.dtos.requests.ProdutoRequestDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
@@ -15,7 +16,7 @@ public class Produto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nome;
-    private Double preco;
+    private BigDecimal preco;
     private Integer quantidade;
 
     @OneToMany(mappedBy = "produto")

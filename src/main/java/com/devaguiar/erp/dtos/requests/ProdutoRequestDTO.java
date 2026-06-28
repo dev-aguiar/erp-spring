@@ -1,4 +1,19 @@
 package com.devaguiar.erp.dtos.requests;
 
-public record ProdutoRequestDTO(String nome, Double preco, Integer quantidade) {
+import jakarta.validation.constraints.*;
+
+import java.math.BigDecimal;
+
+public record ProdutoRequestDTO(
+        @NotBlank
+        String nome,
+
+        @NotNull
+        @Positive
+        @Digits(integer = 8, fraction = 2)
+        BigDecimal preco,
+
+        @NotNull
+        @PositiveOrZero
+        Integer quantidade) {
 }

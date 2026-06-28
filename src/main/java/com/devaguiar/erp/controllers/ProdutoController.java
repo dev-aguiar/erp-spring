@@ -3,7 +3,10 @@ package com.devaguiar.erp.controllers;
 import com.devaguiar.erp.dtos.requests.ProdutoRequestDTO;
 import com.devaguiar.erp.dtos.responses.ProdutoResponseDTO;
 import com.devaguiar.erp.services.ProdutoService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,33 +22,31 @@ public class ProdutoController {
         this.produtoService = produtoService;
     }
 
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PostMapping
-    public ProdutoRequestDTO createProduto(@RequestBody ProdutoRequestDTO data) {
-        return produtoService.createProduto(data);
+    public ResponseEntity<ProdutoResponseDTO> createProduto(@Valid @RequestBody ProdutoRequestDTO data) {
+        ProdutoResponseDTO create = produtoService.createProduto(data);
+        return ResponseEntity.status(HttpStatus.CREATED).body(create);
     }
 
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PutMapping(value = "/{id}")
-    public ProdutoRequestDTO updateProduto(@PathVariable Long id, @RequestBody ProdutoRequestDTO data) {
-        return produtoService.updateProduto(id, data);
+    public ResponseEntity<ProdutoResponseDTO> updateProduto(@PathVariable Long id, @Valid @RequestBody ProdutoRequestDTO data) {
+        ProdutoResponseDTO updated = produtoService.updateProduto(id, data);
+        return ResponseEntity.ok(updated);
     }
 
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @DeleteMapping(value = "/{id}")
-    public void deleteProduto(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteProduto(@PathVariable Long id) {
         produtoService.deleteProduto(id);
+        return ResponseEntity.noContent().build();
     }
 
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping
     public List<ProdutoResponseDTO> findAll() {
         return produtoService.findAll();
     }
 
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping(value = "/{id}")
-    public ProdutoResponseDTO findById(@PathVariable Long id) {
-        return produtoService.findById(id);
+    public ResponseEntity<ProdutoResponseDTO> findById(@PathVariable Long id) {
+        return ResponseEntity.ok(produtoService.findById(id));
     }
 }

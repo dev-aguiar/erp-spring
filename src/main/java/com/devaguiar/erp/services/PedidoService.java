@@ -3,14 +3,14 @@ package com.devaguiar.erp.services;
 import com.devaguiar.erp.dtos.requests.AdicionarProdutoPedidoRequestDTO;
 import com.devaguiar.erp.dtos.requests.PedidoRequestDTO;
 import com.devaguiar.erp.dtos.responses.PedidoResponseDTO;
-import com.devaguiar.erp.entities.Cliente;
 import com.devaguiar.erp.entities.ItemPedido;
 import com.devaguiar.erp.entities.Pedido;
 import com.devaguiar.erp.entities.Produto;
 import com.devaguiar.erp.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -33,19 +33,19 @@ public class PedidoService {
         this.itemPedidoRepository = itemPedidoRepository;
     }
 
-    public PedidoRequestDTO createPedido(@RequestBody PedidoRequestDTO data) {
+    public PedidoResponseDTO createPedido(PedidoRequestDTO data) {
         Pedido pedido = new Pedido(data, clienteRepository, vendedorRepository);
         pedidoRepository.save(pedido);
-        return data;
+        return new PedidoResponseDTO(pedido);
     }
 
-    public PedidoRequestDTO updatePedido(Long id, PedidoRequestDTO data) {
+    public PedidoResponseDTO updatePedido(Long id, PedidoRequestDTO data) {
         Pedido pedido = pedidoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pedido não encontrado!"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Pedido não encontrado!"));
         pedido.setDataPedido(data.dataPedido());
         pedido.setStatusPedido(data.statusPedido());
         pedidoRepository.save(pedido);
-        return data;
+        return new PedidoResponseDTO(pedido);
     }
 
     public void adicionarProdutoAoPedido(AdicionarProdutoPedidoRequestDTO data) {
@@ -58,6 +58,9 @@ public class PedidoService {
     }
 
     public void deletePedido(Long id) {
+        if (!pedidoRepository.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Pedido não encontrado!");
+        }
         pedidoRepository.deleteById(id);
     }
 
@@ -67,7 +70,8 @@ public class PedidoService {
     }
 
     public PedidoResponseDTO findById(Long id) {
-        Pedido result = pedidoRepository.findById(id).get();
+        Pedido result = pedidoRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Pedido não encontrado!"));
         return new PedidoResponseDTO(result);
     }
 }
