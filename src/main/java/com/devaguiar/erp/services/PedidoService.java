@@ -9,8 +9,9 @@ import com.devaguiar.erp.entities.Pedido;
 import com.devaguiar.erp.entities.Produto;
 import com.devaguiar.erp.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -33,7 +34,7 @@ public class PedidoService {
         this.itemPedidoRepository = itemPedidoRepository;
     }
 
-    public PedidoResponseDTO createPedido(@RequestBody PedidoRequestDTO data) {
+    public PedidoResponseDTO createPedido(PedidoRequestDTO data) {
         Pedido pedido = new Pedido(data, clienteRepository, vendedorRepository);
         pedidoRepository.save(pedido);
         return new PedidoResponseDTO(pedido);
@@ -41,7 +42,7 @@ public class PedidoService {
 
     public PedidoResponseDTO updatePedido(Long id, PedidoRequestDTO data) {
         Pedido pedido = pedidoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pedido não encontrado!"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Pedido não encontrado!"));
         pedido.setDataPedido(data.dataPedido());
         pedido.setStatusPedido(data.statusPedido());
         pedidoRepository.save(pedido);
@@ -58,6 +59,9 @@ public class PedidoService {
     }
 
     public void deletePedido(Long id) {
+        if (!pedidoRepository.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Pedido não encontrado!");
+        }
         pedidoRepository.deleteById(id);
     }
 
@@ -67,7 +71,8 @@ public class PedidoService {
     }
 
     public PedidoResponseDTO findById(Long id) {
-        Pedido result = pedidoRepository.findById(id).get();
+        Pedido result = pedidoRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Pedido não encontrado!"));
         return new PedidoResponseDTO(result);
     }
 }

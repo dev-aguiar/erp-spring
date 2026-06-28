@@ -4,6 +4,8 @@ import com.devaguiar.erp.dtos.requests.VendedorRequestDTO;
 import com.devaguiar.erp.dtos.responses.VendedorResponseDTO;
 import com.devaguiar.erp.services.VendedorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,33 +21,31 @@ public class VendedorController {
         this.vendedorService = vendedorService;
     }
 
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PostMapping
-    public VendedorRequestDTO createVendedor(@RequestBody VendedorRequestDTO data) {
-        return vendedorService.createVendedor(data);
+    public ResponseEntity<VendedorResponseDTO> createVendedor(@RequestBody VendedorRequestDTO data) {
+        VendedorResponseDTO create = vendedorService.createVendedor(data);
+        return ResponseEntity.status(HttpStatus.CREATED).body(create);
     }
 
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PutMapping(value = "/{id}")
-    public VendedorRequestDTO updateVendedor(@PathVariable Long id, @RequestBody VendedorRequestDTO data) {
-        return vendedorService.updateVendedor(id, data);
+    public ResponseEntity<VendedorResponseDTO> updateVendedor(@PathVariable Long id, @RequestBody VendedorRequestDTO data) {
+        VendedorResponseDTO updated = vendedorService.updateVendedor(id, data);
+        return ResponseEntity.ok(updated);
     }
 
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @DeleteMapping(value = "/{id}")
-    public void deleteVendedor(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteVendedor(@PathVariable Long id) {
         vendedorService.deleteVendedor(id);
+        return ResponseEntity.noContent().build();
     }
 
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping
     public List<VendedorResponseDTO> findAll() {
         return vendedorService.findAll();
     }
 
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping(value = "/{id}")
-    public VendedorResponseDTO findById(@PathVariable Long id) {
-        return vendedorService.findById(id);
+    public ResponseEntity<VendedorResponseDTO> findById(@PathVariable Long id) {
+        return ResponseEntity.ok(vendedorService.findById(id));
     }
 }

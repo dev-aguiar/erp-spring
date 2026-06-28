@@ -5,8 +5,9 @@ import com.devaguiar.erp.dtos.responses.ClienteResponseDTO;
 import com.devaguiar.erp.entities.Cliente;
 import com.devaguiar.erp.repositories.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -20,25 +21,28 @@ public class ClienteService {
         this.clienteRepository = clienteRepository;
     }
 
-    public ClienteRequestDTO createCliente(@RequestBody ClienteRequestDTO data) {
+    public ClienteResponseDTO createCliente(ClienteRequestDTO data) {
         Cliente cliente = new Cliente(data);
         clienteRepository.save(cliente);
-        return data;
+        return new ClienteResponseDTO(cliente);
     }
 
-    public ClienteRequestDTO updateCliente(Long id, ClienteRequestDTO data) {
+    public ClienteResponseDTO updateCliente(Long id, ClienteRequestDTO data) {
         Cliente cliente = clienteRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Cliente não encontrado!"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado!"));
 
         cliente.setNome(data.nome());
         cliente.setEmail(data.email());
         cliente.setTelefone(data.telefone());
         cliente.setEndereco(data.endereco());
         clienteRepository.save(cliente);
-        return data;
+        return new ClienteResponseDTO(cliente);
     }
 
     public void deleteCliente(Long id) {
+        if (!clienteRepository.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado!");
+        }
         clienteRepository.deleteById(id);
     }
 
@@ -48,7 +52,8 @@ public class ClienteService {
     }
 
     public ClienteResponseDTO findById(Long id) {
-        Cliente result = clienteRepository.findById(id).get();
+        Cliente result = clienteRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado!"));
         return new ClienteResponseDTO(result);
     }
 }
