@@ -23,13 +23,13 @@ public class PedidoController {
 
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PostMapping
-    public PedidoRequestDTO createPedido(@RequestBody PedidoRequestDTO data) {
+    public PedidoResponseDTO createPedido(@RequestBody PedidoRequestDTO data) {
         return pedidoService.createPedido(data);
     }
 
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PutMapping("/{id}")
-    public PedidoRequestDTO updatePedido(@PathVariable Long id, @RequestBody PedidoRequestDTO data) {
+    public PedidoResponseDTO updatePedido(@PathVariable Long id, @RequestBody PedidoRequestDTO data) {
         return pedidoService.updatePedido(id, data);
     }
 

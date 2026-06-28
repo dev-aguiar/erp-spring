@@ -33,19 +33,19 @@ public class PedidoService {
         this.itemPedidoRepository = itemPedidoRepository;
     }
 
-    public PedidoRequestDTO createPedido(@RequestBody PedidoRequestDTO data) {
+    public PedidoResponseDTO createPedido(@RequestBody PedidoRequestDTO data) {
         Pedido pedido = new Pedido(data, clienteRepository, vendedorRepository);
         pedidoRepository.save(pedido);
-        return data;
+        return new PedidoResponseDTO(pedido);
     }
 
-    public PedidoRequestDTO updatePedido(Long id, PedidoRequestDTO data) {
+    public PedidoResponseDTO updatePedido(Long id, PedidoRequestDTO data) {
         Pedido pedido = pedidoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Pedido não encontrado!"));
         pedido.setDataPedido(data.dataPedido());
         pedido.setStatusPedido(data.statusPedido());
         pedidoRepository.save(pedido);
-        return data;
+        return new PedidoResponseDTO(pedido);
     }
 
     public void adicionarProdutoAoPedido(AdicionarProdutoPedidoRequestDTO data) {
