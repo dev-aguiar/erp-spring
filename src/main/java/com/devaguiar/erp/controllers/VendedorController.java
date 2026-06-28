@@ -3,6 +3,7 @@ package com.devaguiar.erp.controllers;
 import com.devaguiar.erp.dtos.requests.VendedorRequestDTO;
 import com.devaguiar.erp.dtos.responses.VendedorResponseDTO;
 import com.devaguiar.erp.services.VendedorService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,13 +23,13 @@ public class VendedorController {
     }
 
     @PostMapping
-    public ResponseEntity<VendedorResponseDTO> createVendedor(@RequestBody VendedorRequestDTO data) {
+    public ResponseEntity<VendedorResponseDTO> createVendedor(@Valid @RequestBody VendedorRequestDTO data) {
         VendedorResponseDTO create = vendedorService.createVendedor(data);
         return ResponseEntity.status(HttpStatus.CREATED).body(create);
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<VendedorResponseDTO> updateVendedor(@PathVariable Long id, @RequestBody VendedorRequestDTO data) {
+    public ResponseEntity<VendedorResponseDTO> updateVendedor(@PathVariable Long id, @Valid @RequestBody VendedorRequestDTO data) {
         VendedorResponseDTO updated = vendedorService.updateVendedor(id, data);
         return ResponseEntity.ok(updated);
     }

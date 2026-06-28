@@ -3,6 +3,7 @@ package com.devaguiar.erp.controllers;
 import com.devaguiar.erp.dtos.requests.ItemPedidoRequestDTO;
 import com.devaguiar.erp.dtos.responses.ItemPedidoResponseDTO;
 import com.devaguiar.erp.services.ItemPedidoService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,7 @@ public class ItemPedidoController {
 
     @PostMapping
     public ResponseEntity<ItemPedidoResponseDTO> createItemPedido(@PathVariable Long pedidoId,
-                                                                 @RequestBody ItemPedidoRequestDTO data) {
+                                                                 @Valid @RequestBody ItemPedidoRequestDTO data) {
         ItemPedidoResponseDTO create = itemPedidoService.createItemPedido(pedidoId, data);
         return ResponseEntity.status(HttpStatus.CREATED).body(create);
     }

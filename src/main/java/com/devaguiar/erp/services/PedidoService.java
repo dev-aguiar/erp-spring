@@ -3,7 +3,6 @@ package com.devaguiar.erp.services;
 import com.devaguiar.erp.dtos.requests.AdicionarProdutoPedidoRequestDTO;
 import com.devaguiar.erp.dtos.requests.PedidoRequestDTO;
 import com.devaguiar.erp.dtos.responses.PedidoResponseDTO;
-import com.devaguiar.erp.entities.Cliente;
 import com.devaguiar.erp.entities.ItemPedido;
 import com.devaguiar.erp.entities.Pedido;
 import com.devaguiar.erp.entities.Produto;

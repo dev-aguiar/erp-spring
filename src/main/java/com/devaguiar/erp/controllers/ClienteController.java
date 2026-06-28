@@ -3,6 +3,7 @@ package com.devaguiar.erp.controllers;
 import com.devaguiar.erp.dtos.requests.ClienteRequestDTO;
 import com.devaguiar.erp.dtos.responses.ClienteResponseDTO;
 import com.devaguiar.erp.services.ClienteService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,13 +23,13 @@ public class ClienteController {
     }
 
     @PostMapping
-    public ResponseEntity<ClienteResponseDTO> createCliente(@RequestBody ClienteRequestDTO data) {
+    public ResponseEntity<ClienteResponseDTO> createCliente(@Valid @RequestBody ClienteRequestDTO data) {
         ClienteResponseDTO created = clienteService.createCliente(data);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<ClienteResponseDTO> updateCliente(@PathVariable Long id, @RequestBody ClienteRequestDTO data) {
+    public ResponseEntity<ClienteResponseDTO> updateCliente(@PathVariable Long id, @Valid @RequestBody ClienteRequestDTO data) {
         ClienteResponseDTO updated = clienteService.updateCliente(id, data);
         return ResponseEntity.ok(updated);
     }

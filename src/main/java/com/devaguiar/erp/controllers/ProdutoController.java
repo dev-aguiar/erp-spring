@@ -3,6 +3,7 @@ package com.devaguiar.erp.controllers;
 import com.devaguiar.erp.dtos.requests.ProdutoRequestDTO;
 import com.devaguiar.erp.dtos.responses.ProdutoResponseDTO;
 import com.devaguiar.erp.services.ProdutoService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,13 +23,13 @@ public class ProdutoController {
     }
 
     @PostMapping
-    public ResponseEntity<ProdutoResponseDTO> createProduto(@RequestBody ProdutoRequestDTO data) {
+    public ResponseEntity<ProdutoResponseDTO> createProduto(@Valid @RequestBody ProdutoRequestDTO data) {
         ProdutoResponseDTO create = produtoService.createProduto(data);
         return ResponseEntity.status(HttpStatus.CREATED).body(create);
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<ProdutoResponseDTO> updateProduto(@PathVariable Long id, @RequestBody ProdutoRequestDTO data) {
+    public ResponseEntity<ProdutoResponseDTO> updateProduto(@PathVariable Long id, @Valid @RequestBody ProdutoRequestDTO data) {
         ProdutoResponseDTO updated = produtoService.updateProduto(id, data);
         return ResponseEntity.ok(updated);
     }
