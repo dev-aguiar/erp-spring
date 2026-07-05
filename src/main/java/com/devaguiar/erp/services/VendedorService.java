@@ -3,11 +3,10 @@ package com.devaguiar.erp.services;
 import com.devaguiar.erp.dtos.requests.VendedorRequestDTO;
 import com.devaguiar.erp.dtos.responses.VendedorResponseDTO;
 import com.devaguiar.erp.entities.Vendedor;
+import com.devaguiar.erp.exceptions.ResourceNotFoundException;
 import com.devaguiar.erp.repositories.VendedorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -29,7 +28,7 @@ public class VendedorService {
 
     public VendedorResponseDTO updateVendedor(Long id, VendedorRequestDTO data) {
         Vendedor vendedor = repository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Vendedor não encontrado!"));
+                .orElseThrow(() -> new ResourceNotFoundException("Vendedor não encontrado!"));
 
         vendedor.setNome(data.nome());
         vendedor.setDataNascimento(data.dataNascimento());
@@ -39,7 +38,7 @@ public class VendedorService {
 
     public void deleteVendedor(Long id) {
         if (!repository.existsById(id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Vendedor não encontrado!");
+            throw new ResourceNotFoundException("Vendedor não encontrado!");
         }
         repository.deleteById(id);
     }
@@ -52,7 +51,7 @@ public class VendedorService {
 
     public VendedorResponseDTO findById(Long id) {
         Vendedor result = repository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Vendedor não encontrado!"));
+                .orElseThrow(() -> new ResourceNotFoundException("Vendedor não encontrado!"));
         return new VendedorResponseDTO(result);
     }
 }

@@ -4,6 +4,7 @@ import com.devaguiar.erp.dtos.requests.PedidoRequestDTO;
 import com.devaguiar.erp.dtos.responses.ClienteResumidoDTO;
 import com.devaguiar.erp.enums.FormaPagamento;
 import com.devaguiar.erp.enums.StatusPedido;
+import com.devaguiar.erp.exceptions.ResourceNotFoundException;
 import com.devaguiar.erp.repositories.ClienteRepository;
 import com.devaguiar.erp.repositories.VendedorRepository;
 import jakarta.persistence.*;
@@ -37,9 +38,9 @@ public class Pedido {
 
     public Pedido(PedidoRequestDTO data, ClienteRepository clienteRepository, VendedorRepository vendedorRepository) {
         this.cliente = clienteRepository.findById(data.clienteId())
-                .orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado"));
         this.vendedor = vendedorRepository.findById(data.vendedorId())
-                .orElseThrow(() -> new IllegalArgumentException("Vendedor não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Vendedor não encontrado"));
         this.dataPedido = data.dataPedido();
         this.statusPedido = data.statusPedido();
         this.formaPagamento = data.formaPagamento();

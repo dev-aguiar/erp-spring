@@ -5,13 +5,12 @@ import com.devaguiar.erp.dtos.responses.ItemPedidoResponseDTO;
 import com.devaguiar.erp.entities.ItemPedido;
 import com.devaguiar.erp.entities.Pedido;
 import com.devaguiar.erp.entities.Produto;
+import com.devaguiar.erp.exceptions.ResourceNotFoundException;
 import com.devaguiar.erp.repositories.ItemPedidoRepository;
 import com.devaguiar.erp.repositories.PedidoRepository;
 import com.devaguiar.erp.repositories.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,10 +31,10 @@ public class ItemPedidoService {
 
     public ItemPedidoResponseDTO createItemPedido(Long pedidoId, ItemPedidoRequestDTO data) {
         Pedido pedido = pedidoRepository.findById(pedidoId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Pedido não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Pedido não encontrado"));
 
         Produto produto = produtoRepository.findById(data.produtoId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado"));
 
         ItemPedido itemPedido = new ItemPedido();
         itemPedido.setPedido(pedido);
