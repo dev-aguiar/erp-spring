@@ -4,7 +4,6 @@ import com.devaguiar.erp.dtos.requests.VendedorRequestDTO;
 import com.devaguiar.erp.dtos.responses.VendedorResponseDTO;
 import com.devaguiar.erp.services.VendedorService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +16,6 @@ public class VendedorController {
 
     private final VendedorService vendedorService;
 
-    @Autowired
     public VendedorController(VendedorService vendedorService) {
         this.vendedorService = vendedorService;
     }

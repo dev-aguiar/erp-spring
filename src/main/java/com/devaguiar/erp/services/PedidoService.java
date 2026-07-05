@@ -2,13 +2,11 @@ package com.devaguiar.erp.services;
 
 import com.devaguiar.erp.dtos.requests.AdicionarProdutoPedidoRequestDTO;
 import com.devaguiar.erp.dtos.requests.PedidoRequestDTO;
+import com.devaguiar.erp.dtos.responses.ClienteResumidoDTO;
 import com.devaguiar.erp.dtos.responses.PedidoResponseDTO;
-import com.devaguiar.erp.entities.ItemPedido;
-import com.devaguiar.erp.entities.Pedido;
-import com.devaguiar.erp.entities.Produto;
+import com.devaguiar.erp.entities.*;
 import com.devaguiar.erp.exceptions.ResourceNotFoundException;
 import com.devaguiar.erp.repositories.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,8 +21,11 @@ public class PedidoService {
     private final ItemPedidoRepository itemPedidoRepository;
 
 
-    @Autowired
-    public PedidoService(PedidoRepository pedidoRepository, ProdutoRepository produtoRepository, ClienteRepository clienteRepository, VendedorRepository vendedorRepository, ItemPedidoRepository itemPedidoRepository) {
+    public PedidoService(PedidoRepository pedidoRepository,
+                         ProdutoRepository produtoRepository,
+                         ClienteRepository clienteRepository,
+                         VendedorRepository vendedorRepository,
+                         ItemPedidoRepository itemPedidoRepository) {
         this.pedidoRepository = pedidoRepository;
         this.produtoRepository = produtoRepository;
         this.clienteRepository = clienteRepository;
@@ -33,7 +34,14 @@ public class PedidoService {
     }
 
     public PedidoResponseDTO createPedido(PedidoRequestDTO data) {
-        Pedido pedido = new Pedido(data, clienteRepository, vendedorRepository);
+        Cliente cliente = clienteRepository.findById(data.clienteId())
+                .orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado!"));
+
+        Vendedor vendedor = vendedorRepository.findById(data.vendedorId())
+                .orElseThrow(() -> new ResourceNotFoundException("Vendedor não encontrado!"));
+
+        Pedido pedido = new Pedido(cliente, vendedor, data.dataPedido(),
+                data.formaPagamento(), data.statusPedido());
         pedidoRepository.save(pedido);
         return new PedidoResponseDTO(pedido);
     }

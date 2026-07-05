@@ -4,7 +4,6 @@ import com.devaguiar.erp.dtos.requests.ProdutoRequestDTO;
 import com.devaguiar.erp.dtos.responses.ProdutoResponseDTO;
 import com.devaguiar.erp.services.ProdutoService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +16,6 @@ public class ProdutoController {
 
     private final ProdutoService produtoService;
 
-    @Autowired
     public ProdutoController(ProdutoService produtoService) {
         this.produtoService = produtoService;
     }

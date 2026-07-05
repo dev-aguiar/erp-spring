@@ -9,7 +9,6 @@ import com.devaguiar.erp.exceptions.ResourceNotFoundException;
 import com.devaguiar.erp.repositories.ItemPedidoRepository;
 import com.devaguiar.erp.repositories.PedidoRepository;
 import com.devaguiar.erp.repositories.ProdutoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,7 +21,6 @@ public class ItemPedidoService {
     private final PedidoRepository pedidoRepository;
     private final ProdutoRepository produtoRepository;
 
-    @Autowired
     public ItemPedidoService(ItemPedidoRepository itemPedidoRepository, PedidoRepository pedidoRepository, ProdutoRepository produtoRepository) {
         this.itemPedidoRepository = itemPedidoRepository;
         this.pedidoRepository = pedidoRepository;

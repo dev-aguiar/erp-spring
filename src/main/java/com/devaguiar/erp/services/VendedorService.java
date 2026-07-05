@@ -5,7 +5,6 @@ import com.devaguiar.erp.dtos.responses.VendedorResponseDTO;
 import com.devaguiar.erp.entities.Vendedor;
 import com.devaguiar.erp.exceptions.ResourceNotFoundException;
 import com.devaguiar.erp.repositories.VendedorRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,7 +14,6 @@ public class VendedorService {
 
     private final VendedorRepository repository;
 
-    @Autowired
     public VendedorService(VendedorRepository repository) {
         this.repository = repository;
     }

@@ -6,7 +6,8 @@ import lombok.*;
 import java.math.BigDecimal;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class ItemPedido {
