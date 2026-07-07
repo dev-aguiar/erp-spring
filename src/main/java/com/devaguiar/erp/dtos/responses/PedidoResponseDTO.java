@@ -15,6 +15,6 @@ public record PedidoResponseDTO(Long id,
                                 StatusPedido statusPedido) {
 
     public PedidoResponseDTO(Pedido pedido) {
-        this(pedido.getId(), pedido.obterClienteResumido(), pedido.getVendedor(), pedido.getDataPedido(), pedido.getFormaPagamento(), pedido.getStatusPedido());
+        this(pedido.getId(), new ClienteResumidoDTO(pedido.getCliente()), pedido.getVendedor(), pedido.getDataPedido(), pedido.getFormaPagamento(), pedido.getStatusPedido());
     }
 }

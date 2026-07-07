@@ -3,8 +3,8 @@ package com.devaguiar.erp.services;
 import com.devaguiar.erp.dtos.requests.VendedorRequestDTO;
 import com.devaguiar.erp.dtos.responses.VendedorResponseDTO;
 import com.devaguiar.erp.entities.Vendedor;
+import com.devaguiar.erp.exceptions.ResourceNotFoundException;
 import com.devaguiar.erp.repositories.VendedorRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,28 +14,30 @@ public class VendedorService {
 
     private final VendedorRepository repository;
 
-    @Autowired
     public VendedorService(VendedorRepository repository) {
         this.repository = repository;
     }
 
-    public VendedorRequestDTO createVendedor(VendedorRequestDTO data) {
+    public VendedorResponseDTO createVendedor(VendedorRequestDTO data) {
         Vendedor vendedor = new Vendedor(data);
         repository.save(vendedor);
-        return data;
+        return new VendedorResponseDTO(vendedor);
     }
 
-    public VendedorRequestDTO updateVendedor(Long id, VendedorRequestDTO data) {
+    public VendedorResponseDTO updateVendedor(Long id, VendedorRequestDTO data) {
         Vendedor vendedor = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Vendedor não encontrado!"));
+                .orElseThrow(() -> new ResourceNotFoundException("Vendedor não encontrado!"));
 
         vendedor.setNome(data.nome());
         vendedor.setDataNascimento(data.dataNascimento());
         repository.save(vendedor);
-        return data;
+        return new VendedorResponseDTO(vendedor);
     }
 
     public void deleteVendedor(Long id) {
+        if (!repository.existsById(id)) {
+            throw new ResourceNotFoundException("Vendedor não encontrado!");
+        }
         repository.deleteById(id);
     }
 
@@ -46,7 +48,8 @@ public class VendedorService {
     }
 
     public VendedorResponseDTO findById(Long id) {
-        Vendedor result = repository.findById(id).get();
+        Vendedor result = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Vendedor não encontrado!"));
         return new VendedorResponseDTO(result);
     }
 }

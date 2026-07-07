@@ -3,8 +3,11 @@ package com.devaguiar.erp.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class ItemPedido {
@@ -18,7 +21,7 @@ public class ItemPedido {
     @JoinColumn(name = "produto_id")
     private Produto produto;
     private Integer quantidade;
-    private Double valorUnitario;
+    private BigDecimal valorUnitario;
 
     public ItemPedido(Pedido pedido, Produto produto, int quantidade) {
         this.pedido = pedido;

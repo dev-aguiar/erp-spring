@@ -1,4 +1,16 @@
 package com.devaguiar.erp.dtos.requests;
 
-public record AdicionarProdutoPedidoRequestDTO(Long pedidoId, Long produtoId, int quantidade) {
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+
+public record AdicionarProdutoPedidoRequestDTO(
+
+        @NotNull
+        Long pedidoId,
+
+        @NotNull
+        Long produtoId,
+
+        @Positive
+        int quantidade) {
 }

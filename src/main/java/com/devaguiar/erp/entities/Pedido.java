@@ -1,11 +1,7 @@
 package com.devaguiar.erp.entities;
 
-import com.devaguiar.erp.dtos.requests.PedidoRequestDTO;
-import com.devaguiar.erp.dtos.responses.ClienteResumidoDTO;
 import com.devaguiar.erp.enums.FormaPagamento;
 import com.devaguiar.erp.enums.StatusPedido;
-import com.devaguiar.erp.repositories.ClienteRepository;
-import com.devaguiar.erp.repositories.VendedorRepository;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,7 +9,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Pedido {
@@ -35,17 +32,11 @@ public class Pedido {
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
     private List<ItemPedido> itens;
 
-    public Pedido(PedidoRequestDTO data, ClienteRepository clienteRepository, VendedorRepository vendedorRepository) {
-        this.cliente = clienteRepository.findById(data.clienteId())
-                .orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado"));
-        this.vendedor = vendedorRepository.findById(data.vendedorId())
-                .orElseThrow(() -> new IllegalArgumentException("Vendedor não encontrado"));
-        this.dataPedido = data.dataPedido();
-        this.statusPedido = data.statusPedido();
-        this.formaPagamento = data.formaPagamento();
-    }
-
-    public ClienteResumidoDTO obterClienteResumido() {
-        return new ClienteResumidoDTO(cliente.getId(), cliente.getNome());
+    public Pedido(Cliente cliente, Vendedor vendedor, LocalDate dataPedido, FormaPagamento formaPagamento, StatusPedido statusPedido) {
+        this.cliente = cliente;
+        this.vendedor = vendedor;
+        this.dataPedido = dataPedido;
+        this.statusPedido = statusPedido;
+        this.formaPagamento = formaPagamento;
     }
 }

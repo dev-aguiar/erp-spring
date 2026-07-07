@@ -7,8 +7,12 @@ import java.util.List;
 public record ClienteResponseDTO(Long id, String nome, String email, String telefone, List<PedidoResumidoResponseDTO> pedidos) {
 
     public ClienteResponseDTO(Cliente cliente) {
-        this(cliente.getId(), cliente.getNome(), cliente.getEmail(), cliente.getTelefone(), List.of());
-
+        this(cliente.getId(), cliente.getNome(), cliente.getEmail(), cliente.getTelefone(),
+                cliente.getPedidos() == null
+                        ? List.of()
+                        : cliente.getPedidos().stream()
+                        .map(PedidoResumidoResponseDTO::new)
+                        .toList());
     }
 }
 

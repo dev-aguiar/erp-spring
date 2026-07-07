@@ -2,15 +2,12 @@ package com.devaguiar.erp.services;
 
 import com.devaguiar.erp.dtos.requests.AdicionarProdutoPedidoRequestDTO;
 import com.devaguiar.erp.dtos.requests.PedidoRequestDTO;
+import com.devaguiar.erp.dtos.responses.ClienteResumidoDTO;
 import com.devaguiar.erp.dtos.responses.PedidoResponseDTO;
-import com.devaguiar.erp.entities.Cliente;
-import com.devaguiar.erp.entities.ItemPedido;
-import com.devaguiar.erp.entities.Pedido;
-import com.devaguiar.erp.entities.Produto;
+import com.devaguiar.erp.entities.*;
+import com.devaguiar.erp.exceptions.ResourceNotFoundException;
 import com.devaguiar.erp.repositories.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -24,8 +21,11 @@ public class PedidoService {
     private final ItemPedidoRepository itemPedidoRepository;
 
 
-    @Autowired
-    public PedidoService(PedidoRepository pedidoRepository, ProdutoRepository produtoRepository, ClienteRepository clienteRepository, VendedorRepository vendedorRepository, ItemPedidoRepository itemPedidoRepository) {
+    public PedidoService(PedidoRepository pedidoRepository,
+                         ProdutoRepository produtoRepository,
+                         ClienteRepository clienteRepository,
+                         VendedorRepository vendedorRepository,
+                         ItemPedidoRepository itemPedidoRepository) {
         this.pedidoRepository = pedidoRepository;
         this.produtoRepository = produtoRepository;
         this.clienteRepository = clienteRepository;
@@ -33,31 +33,41 @@ public class PedidoService {
         this.itemPedidoRepository = itemPedidoRepository;
     }
 
-    public PedidoRequestDTO createPedido(@RequestBody PedidoRequestDTO data) {
-        Pedido pedido = new Pedido(data, clienteRepository, vendedorRepository);
+    public PedidoResponseDTO createPedido(PedidoRequestDTO data) {
+        Cliente cliente = clienteRepository.findById(data.clienteId())
+                .orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado!"));
+
+        Vendedor vendedor = vendedorRepository.findById(data.vendedorId())
+                .orElseThrow(() -> new ResourceNotFoundException("Vendedor não encontrado!"));
+
+        Pedido pedido = new Pedido(cliente, vendedor, data.dataPedido(),
+                data.formaPagamento(), data.statusPedido());
         pedidoRepository.save(pedido);
-        return data;
+        return new PedidoResponseDTO(pedido);
     }
 
-    public PedidoRequestDTO updatePedido(Long id, PedidoRequestDTO data) {
+    public PedidoResponseDTO updatePedido(Long id, PedidoRequestDTO data) {
         Pedido pedido = pedidoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pedido não encontrado!"));
+                .orElseThrow(() -> new ResourceNotFoundException("Pedido não encontrado!"));
         pedido.setDataPedido(data.dataPedido());
         pedido.setStatusPedido(data.statusPedido());
         pedidoRepository.save(pedido);
-        return data;
+        return new PedidoResponseDTO(pedido);
     }
 
     public void adicionarProdutoAoPedido(AdicionarProdutoPedidoRequestDTO data) {
         Pedido pedido = pedidoRepository.findById(data.pedidoId())
-                .orElseThrow(() -> new IllegalArgumentException("Pedido não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Pedido não encontrado"));
         Produto produto = produtoRepository.findById(data.produtoId())
-                .orElseThrow(() -> new IllegalArgumentException("Produto não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado"));
         ItemPedido itemPedido = new ItemPedido(pedido, produto, data.quantidade());
         itemPedidoRepository.save(itemPedido);
     }
 
     public void deletePedido(Long id) {
+        if (!pedidoRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Pedido não encontrado!");
+        }
         pedidoRepository.deleteById(id);
     }
 
@@ -67,7 +77,8 @@ public class PedidoService {
     }
 
     public PedidoResponseDTO findById(Long id) {
-        Pedido result = pedidoRepository.findById(id).get();
+        Pedido result = pedidoRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Pedido não encontrado!"));
         return new PedidoResponseDTO(result);
     }
 }

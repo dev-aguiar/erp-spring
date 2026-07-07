@@ -3,7 +3,9 @@ package com.devaguiar.erp.controllers;
 import com.devaguiar.erp.dtos.requests.ItemPedidoRequestDTO;
 import com.devaguiar.erp.dtos.responses.ItemPedidoResponseDTO;
 import com.devaguiar.erp.services.ItemPedidoService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,19 +16,17 @@ public class ItemPedidoController {
 
     private final ItemPedidoService itemPedidoService;
 
-    @Autowired
     public ItemPedidoController(ItemPedidoService itemPedidoService) {
         this.itemPedidoService = itemPedidoService;
     }
 
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PostMapping
-    public ItemPedidoResponseDTO createItemPedido(@PathVariable Long pedidoId,
-                                                  @RequestBody ItemPedidoRequestDTO data) {
-        return itemPedidoService.createItemPedido(pedidoId, data);
+    public ResponseEntity<ItemPedidoResponseDTO> createItemPedido(@PathVariable Long pedidoId,
+                                                                 @Valid @RequestBody ItemPedidoRequestDTO data) {
+        ItemPedidoResponseDTO create = itemPedidoService.createItemPedido(pedidoId, data);
+        return ResponseEntity.status(HttpStatus.CREATED).body(create);
     }
 
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping
     public List<ItemPedidoResponseDTO> getAllItems(@PathVariable Long pedidoId) {
         return itemPedidoService.getAllItemsByPedido(pedidoId);

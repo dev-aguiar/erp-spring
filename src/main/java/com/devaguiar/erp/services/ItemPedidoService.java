@@ -5,10 +5,10 @@ import com.devaguiar.erp.dtos.responses.ItemPedidoResponseDTO;
 import com.devaguiar.erp.entities.ItemPedido;
 import com.devaguiar.erp.entities.Pedido;
 import com.devaguiar.erp.entities.Produto;
+import com.devaguiar.erp.exceptions.ResourceNotFoundException;
 import com.devaguiar.erp.repositories.ItemPedidoRepository;
 import com.devaguiar.erp.repositories.PedidoRepository;
 import com.devaguiar.erp.repositories.ProdutoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,7 +21,6 @@ public class ItemPedidoService {
     private final PedidoRepository pedidoRepository;
     private final ProdutoRepository produtoRepository;
 
-    @Autowired
     public ItemPedidoService(ItemPedidoRepository itemPedidoRepository, PedidoRepository pedidoRepository, ProdutoRepository produtoRepository) {
         this.itemPedidoRepository = itemPedidoRepository;
         this.pedidoRepository = pedidoRepository;
@@ -29,8 +28,11 @@ public class ItemPedidoService {
     }
 
     public ItemPedidoResponseDTO createItemPedido(Long pedidoId, ItemPedidoRequestDTO data) {
-        Pedido pedido = pedidoRepository.findById(pedidoId).orElseThrow(() -> new RuntimeException("Pedido não encontrado"));
-        Produto produto = produtoRepository.findById(data.produtoId()).orElseThrow(() -> new RuntimeException("Produto não encontrado"));
+        Pedido pedido = pedidoRepository.findById(pedidoId)
+                .orElseThrow(() -> new ResourceNotFoundException("Pedido não encontrado"));
+
+        Produto produto = produtoRepository.findById(data.produtoId())
+                .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado"));
 
         ItemPedido itemPedido = new ItemPedido();
         itemPedido.setPedido(pedido);

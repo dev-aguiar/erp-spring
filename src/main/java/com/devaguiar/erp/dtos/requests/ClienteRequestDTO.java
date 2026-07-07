@@ -1,4 +1,19 @@
 package com.devaguiar.erp.dtos.requests;
 
-public record ClienteRequestDTO(String nome, String email, String telefone, String endereco) {
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+
+public record ClienteRequestDTO(
+
+        @NotBlank
+        String nome,
+
+        @NotBlank
+        @Email
+        String email,
+
+        @NotBlank
+        String telefone,
+
+        String endereco) {
 }
