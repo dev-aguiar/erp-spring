@@ -21,12 +21,12 @@ public enum FormaPagamento {
     }
 
     @JsonCreator
-    public static boolean containsValue(String valor) {
-        for (FormaPagamento valueEnumeration : values()) {
-            if (valueEnumeration.getValor().equalsIgnoreCase(valor.trim())) {
-                return true;
+    public static FormaPagamento fromValor(String valor) {
+        for (FormaPagamento item : values()) {
+            if (item.valor.equalsIgnoreCase(valor.trim())) {
+                return item;
             }
         }
-        return false;
+        throw new IllegalArgumentException("Forma de pagamento inválida: " + valor);
     }
 }
