@@ -21,12 +21,12 @@ public enum StatusPedido {
     }
 
     @JsonCreator
-    public static boolean containsValue(String valor) {
-        for (StatusPedido valueEnumeration : values()) {
-            if (valueEnumeration.getValor().equalsIgnoreCase(valor.trim())) {
-                return true;
+    public static StatusPedido fromValor(String valor) {
+        for (StatusPedido item : values()) {
+            if (item.valor.equalsIgnoreCase(valor.trim())) {
+                return item;
             }
         }
-        return false;
+        throw new IllegalArgumentException("Status de pedido inválido: " + valor);
     }
 }

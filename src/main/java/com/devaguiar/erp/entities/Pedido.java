@@ -26,7 +26,9 @@ public class Pedido {
     @JoinColumn(name = "vendedor_id")
     private Vendedor vendedor;
     private LocalDate dataPedido;
+    @Enumerated(EnumType.STRING)
     private FormaPagamento formaPagamento;
+    @Enumerated(EnumType.STRING)
     private StatusPedido statusPedido;
 
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
