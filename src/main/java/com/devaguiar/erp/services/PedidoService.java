@@ -61,6 +61,7 @@ public class PedidoService {
         Produto produto = produtoRepository.findById(data.produtoId())
                 .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado"));
         ItemPedido itemPedido = new ItemPedido(pedido, produto, data.quantidade());
+        itemPedido.setValorUnitario(produto.getPreco());
         itemPedidoRepository.save(itemPedido);
     }
 
