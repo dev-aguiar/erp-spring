@@ -6,6 +6,15 @@ Construído com uma arquitetura robusta e escalável, o projeto visa otimizar op
 
 ---
 
+## 🔗 Demo ao vivo
+
+- 🖥️ **Aplicação (Front-end):** https://erp-frontend-flax-seven.vercel.app
+- 📄 **Documentação da API (Swagger):** https://erp-spring.onrender.com/swagger-ui/index.html
+- 💻 **Repositório do Front-end:** https://github.com/dev-aguiar/erp-frontend
+
+> ⏳ O back-end está hospedado no plano gratuito do Render, que "hiberna" após inatividade.
+> A primeira requisição pode levar ~30-50s para "acordar" o servidor — depois disso, fica rápido.
+
 ## 🏗️ Padrão de Arquitetura (Camadas)
 O back-end do sistema foi estruturado seguindo o padrão de camadas (Layered Architecture), garantindo alta coesão, baixo acoplamento e facilidade de manutenção:
 
@@ -23,14 +32,18 @@ O back-end do sistema foi estruturado seguindo o padrão de camadas (Layered Arc
 
 ### Back-end
 - ![Java](https://img.shields.io/badge/Java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white) **Java**: Linguagem base do projeto.
-- ![Spring](https://img.shields.io/badge/Spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white) **Spring Boot**: Framework principal para criação da API REST, injeção de dependências e segurança.
+- ![Spring](https://img.shields.io/badge/Spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white) **Spring Boot**: Framework principal para criação da API REST e injeção de dependências.
 - ![Hibernate](https://img.shields.io/badge/Hibernate-59666C?style=for-the-badge&logo=Hibernate&logoColor=white) **Hibernate**: ORM utilizado para o mapeamento objeto-relacional.
 - ![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=Swagger&logoColor=white) **Swagger (OpenAPI)**: Documentação interativa e padronizada de todos os endpoints.
-- ![Postman](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=Postman&logoColor=white) **Postman**: Utilizado para testes de integração e simulação de requisições.
+- ![JUnit](https://img.shields.io/badge/JUnit5-25A162?style=for-the-badge&logo=junit5&logoColor=white) **JUnit 5 + Mockito**: Testes unitários dos services e dos controllers (MockMvc).
+- ![Flyway](https://img.shields.io/badge/Flyway-CC0200?style=for-the-badge&logo=flyway&logoColor=white) **Flyway**: Versionamento e migrations do banco de dados (schema controlado).
 
 ### Banco de Dados & Infraestrutura
 - ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white) **PostgreSQL**: Banco de dados relacional robusto para garantir a integridade das transações do ERP.
 - ![Docker](https://img.shields.io/badge/Docker-2CA5E0?style=for-the-badge&logo=docker&logoColor=white) **Docker**: Containerização do banco de dados para facilitar a execução local e padronização do ambiente.
+- ![Render](https://img.shields.io/badge/Render-46E3B7?style=for-the-badge&logo=render&logoColor=black) **Render**: Deploy do back-end (Docker).
+- ![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white) **Supabase**: PostgreSQL gerenciado em nuvem.
+- ![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white) **Vercel**: Deploy do front-end.
 
 ---
 
@@ -66,10 +79,36 @@ O front-end foi desenvolvido para ser intuitivo e dinâmico, contando com rotas 
 
 ---
 
-## ⚙️ Como executar o projeto localmente
+## 🗺️ Próximos passos
 
-Para rodar este projeto na sua máquina, você precisará do [Java](https://www.oracle.com/java/), [Maven](https://maven.apache.org/) e do [Docker](https://www.docker.com/) instalados.
+- 🔐 **Autenticação e autorização com Spring Security + JWT** (em desenvolvimento).
+- 📦 Controle de estoque automático ao adicionar produtos a um pedido.
+- 📄 Paginação e filtros nos endpoints de listagem.
+- 🤖 CI com GitHub Actions rodando os testes automaticamente.
 
-1. Clone este repositório:
-```bash
-   git clone https://github.com/dev-aguiar/erp-spring.git
+---
+
+## ⚙️ Como executar localmente
+
+Pré-requisitos: [Java 17+](https://www.oracle.com/java/), [Maven](https://maven.apache.org/) e [Docker](https://www.docker.com/) (para o banco).
+
+1. Clone o repositório:
+    ```bash
+    git clone https://github.com/dev-aguiar/erp-spring.git
+    cd erp-spring
+    ```
+
+2. Suba um PostgreSQL local (via Docker):
+    ```bash
+    docker run --name erp-db
+      -e POSTGRES_DB=erp
+      -e POSTGRES_PASSWORD=123456
+      -p 5432:5432 -d postgres:16
+    ```
+
+3. Rode a aplicação (o perfil `local` já é o padrão):
+    ```bash
+    ./mvnw spring-boot:run
+    ```
+
+4. Acesse o Swagger: http://localhost:8080/swagger-ui/index.html
