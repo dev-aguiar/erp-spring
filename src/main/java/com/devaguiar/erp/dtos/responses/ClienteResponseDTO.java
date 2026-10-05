@@ -4,10 +4,10 @@ import com.devaguiar.erp.entities.Cliente;
 
 import java.util.List;
 
-public record ClienteResponseDTO(Long id, String nome, String email, String telefone, List<PedidoResumidoResponseDTO> pedidos) {
+public record ClienteResponseDTO(Long id, String nome, String email, String telefone, String endereco, List<PedidoResumidoResponseDTO> pedidos) {
 
     public ClienteResponseDTO(Cliente cliente) {
-        this(cliente.getId(), cliente.getNome(), cliente.getEmail(), cliente.getTelefone(),
+        this(cliente.getId(), cliente.getNome(), cliente.getEmail(), cliente.getTelefone(), cliente.getEndereco(),
                 cliente.getPedidos() == null
                         ? List.of()
                         : cliente.getPedidos().stream()
