@@ -36,6 +36,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(body);
     }
 
+    @ExceptionHandler(EstoqueInsuficienteException.class)
+    public ResponseEntity<ErrorResponse> handleEstoque(EstoqueInsuficienteException ex, HttpServletRequest req) {
+        ErrorResponse body = new ErrorResponse(
+                Instant.now(), HttpStatus.CONFLICT.value(), "Conflict",
+                ex.getMessage(), req.getRequestURI(), null);
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGeneric(Exception ex, HttpServletRequest req) {
         log.error("Erro não tratado em {}", req.getRequestURI(), ex);
