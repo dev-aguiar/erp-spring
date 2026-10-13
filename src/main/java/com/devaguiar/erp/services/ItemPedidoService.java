@@ -10,6 +10,7 @@ import com.devaguiar.erp.repositories.ItemPedidoRepository;
 import com.devaguiar.erp.repositories.PedidoRepository;
 import com.devaguiar.erp.repositories.ProdutoRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,12 +28,15 @@ public class ItemPedidoService {
         this.produtoRepository = produtoRepository;
     }
 
+    @Transactional
     public ItemPedidoResponseDTO createItemPedido(Long pedidoId, ItemPedidoRequestDTO data) {
         Pedido pedido = pedidoRepository.findById(pedidoId)
                 .orElseThrow(() -> new ResourceNotFoundException("Pedido não encontrado"));
 
         Produto produto = produtoRepository.findById(data.produtoId())
                 .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado"));
+
+        produto.darBaixaNoEstoque(data.quantidade());
 
         ItemPedido itemPedido = new ItemPedido();
         itemPedido.setPedido(pedido);
@@ -41,6 +45,7 @@ public class ItemPedidoService {
         itemPedido.setValorUnitario(data.valorUnitario());
 
         itemPedidoRepository.save(itemPedido);
+        produtoRepository.save(produto);
 
         return new ItemPedidoResponseDTO(itemPedido);
     }
