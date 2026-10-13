@@ -1,6 +1,7 @@
 package com.devaguiar.erp.entities;
 
 import com.devaguiar.erp.dtos.requests.ProdutoRequestDTO;
+import com.devaguiar.erp.exceptions.EstoqueInsuficienteException;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,5 +28,15 @@ public class Produto {
         this.nome = data.nome();
         this.preco = data.preco();
         this.quantidade = data.quantidade();
+    }
+    
+    public void darBaixaNoEstoque(int quantidadeSolicitada) {
+        int disponivel = this.quantidade == null ? 0 : this.quantidade;
+        if (disponivel < quantidadeSolicitada) {
+            throw new EstoqueInsuficienteException(
+                    "Estoque insuficiente para o produto '" + this.nome + "'. Disponível: "
+                            + disponivel + ", solicitado: " + quantidadeSolicitada);
+        }
+        this.quantidade = disponivel - quantidadeSolicitada;
     }
 }

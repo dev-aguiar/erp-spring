@@ -8,6 +8,7 @@ import com.devaguiar.erp.entities.*;
 import com.devaguiar.erp.exceptions.ResourceNotFoundException;
 import com.devaguiar.erp.repositories.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -55,14 +56,19 @@ public class PedidoService {
         return new PedidoResponseDTO(pedido);
     }
 
+    @Transactional
     public void adicionarProdutoAoPedido(AdicionarProdutoPedidoRequestDTO data) {
         Pedido pedido = pedidoRepository.findById(data.pedidoId())
                 .orElseThrow(() -> new ResourceNotFoundException("Pedido não encontrado"));
         Produto produto = produtoRepository.findById(data.produtoId())
                 .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado"));
+
+        produto.darBaixaNoEstoque(data.quantidade());
+        
         ItemPedido itemPedido = new ItemPedido(pedido, produto, data.quantidade());
         itemPedido.setValorUnitario(produto.getPreco());
         itemPedidoRepository.save(itemPedido);
+        produtoRepository.save(produto);
     }
 
     public void deletePedido(Long id) {

@@ -11,6 +11,7 @@ import com.devaguiar.erp.entities.Vendedor;
 import com.devaguiar.erp.enums.FormaPagamento;
 import com.devaguiar.erp.enums.StatusPedido;
 import com.devaguiar.erp.exceptions.ResourceNotFoundException;
+import com.devaguiar.erp.exceptions.EstoqueInsuficienteException;
 import com.devaguiar.erp.repositories.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -145,6 +146,7 @@ class PedidoServiceTest {
         Produto produto = new Produto();
         produto.setId(2L);
         produto.setPreco(BigDecimal.valueOf(50.00));
+        produto.setQuantidade(10);
 
         AdicionarProdutoPedidoRequestDTO request =
                 new AdicionarProdutoPedidoRequestDTO(1L, 2L, 3);
@@ -153,8 +155,9 @@ class PedidoServiceTest {
         when(produtoRepository.findById(2L)).thenReturn(Optional.of(produto));
 
         pedidoService.adicionarProdutoAoPedido(request);
-
+        assertEquals(7, produto.getQuantidade());
         verify(itemPedidoRepository).save(any(ItemPedido.class));
+        verify(produtoRepository).save(produto);
     }
 
     @Test
@@ -165,6 +168,19 @@ class PedidoServiceTest {
         when(pedidoRepository.findById(99L)).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class,
+                () -> pedidoService.adicionarProdutoAoPedido(request));
+        verify(itemPedidoRepository, never()).save(any());
+    }
+
+    @Test
+    void adicionarProdutoAoPedido_EstoqueInsuficiente() {
+        Pedido pedido = new Pedido(); pedido.setId(1L);
+        Produto produto = new Produto();
+        produto.setId(2L); produto.setPreco(BigDecimal.valueOf(50.00)); produto.setQuantidade(2);
+        AdicionarProdutoPedidoRequestDTO request = new AdicionarProdutoPedidoRequestDTO(1L, 2L, 3);
+        when(pedidoRepository.findById(1L)).thenReturn(Optional.of(pedido));
+        when(produtoRepository.findById(2L)).thenReturn(Optional.of(produto));
+        assertThrows(EstoqueInsuficienteException.class,
                 () -> pedidoService.adicionarProdutoAoPedido(request));
         verify(itemPedidoRepository, never()).save(any());
     }
