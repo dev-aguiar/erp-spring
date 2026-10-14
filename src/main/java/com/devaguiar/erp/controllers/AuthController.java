@@ -40,7 +40,7 @@ public class AuthController {
         if (usuarioRepository.existsByLogin(data.login()))
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         String senhaCriptografada = passwordEncoder.encode(data.senha());
-        usuarioRepository.save(new Usuario(data.login(), senhaCriptografada, data.role()));
+        usuarioRepository.save(new Usuario(data.login(), senhaCriptografada, UserRole.USER));
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }

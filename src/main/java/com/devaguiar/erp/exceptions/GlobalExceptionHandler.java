@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.security.authentication.BadCredentialsException;
 
 import java.time.Instant;
 import java.util.List;
@@ -51,5 +52,13 @@ public class GlobalExceptionHandler {
                 Instant.now(), HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal Server Error",
                 "Ocorreu um erro inesperado.", req.getRequestURI(), null);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ErrorResponse> handleBadCredentials(BadCredentialsException ex, HttpServletRequest req) {
+        ErrorResponse body = new ErrorResponse(
+                Instant.now(), HttpStatus.UNAUTHORIZED.value(), "Unauthorized",
+                "Login ou senha inválidos.", req.getRequestURI(), null);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(body);
     }
 }
