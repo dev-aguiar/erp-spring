@@ -3,6 +3,7 @@ package com.devaguiar.erp.controllers;
 import com.devaguiar.erp.dtos.requests.*;
 import com.devaguiar.erp.dtos.responses.LoginResponseDTO;
 import com.devaguiar.erp.entities.Usuario;
+import com.devaguiar.erp.enums.UserRole;
 import com.devaguiar.erp.repositories.UsuarioRepository;
 import com.devaguiar.erp.services.TokenService;
 import jakarta.validation.Valid;
