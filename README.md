@@ -43,6 +43,15 @@ O segredo de assinatura do token é lido da variável de ambiente `JWT_SECRET` (
 
 ---
 
+## 🔗 Demo ao vivo
+
+- 🖥️ **Aplicação (Front-end):** https://erp-frontend-flax-seven.vercel.app
+- 📄 **Documentação da API (Swagger):** https://erp-spring.onrender.com/swagger-ui/index.html
+- 💻 **Repositório do Front-end:** https://github.com/dev-aguiar/erp-frontend
+
+> ⏳ O back-end está hospedado no plano gratuito do Render, que "hiberna" após inatividade.
+> A primeira requisição pode levar ~30-50s para "acordar" o servidor — depois disso, fica rápido.
+
 ## 🏗️ Padrão de Arquitetura (Camadas)
 
 O back-end foi estruturado seguindo o padrão de camadas (Layered Architecture), garantindo alta coesão, baixo acoplamento e facilidade de manutenção:
