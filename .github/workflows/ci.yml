@@ -21,5 +21,8 @@ jobs:
           distribution: "temurin"
           cache: maven
 
+      - name: Dar permissão ao mvnw
+        run: chmod +x mvnw
+
       - name: Compilar e rodar os testes
         run: ./mvnw --batch-mode clean verify
