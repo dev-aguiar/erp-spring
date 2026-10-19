@@ -1,5 +1,7 @@
 # 📦 ERP - Spring
 
+[![CI](https://github.com/dev-aguiar/erp-spring/actions/workflows/ci.yml/badge.svg)](https://github.com/dev-aguiar/erp-spring/actions/workflows/ci.yml)
+
 O **ERP - Spring** é um sistema completo e modular desenvolvido para a gestão centralizada de pedidos, produtos, clientes e vendedores.
 
 Construído com uma arquitetura robusta e escalável, o projeto conta com uma API REST segura (Spring Security + JWT) no back-end e uma interface moderna e responsiva no front-end.
@@ -21,11 +23,12 @@ Construído com uma arquitetura robusta e escalável, o projeto conta com uma AP
 
 - **Autenticação e autorização** com Spring Security + JWT, com papéis **ADMIN** e **USER**.
 - **CRUD completo** de clientes, produtos, pedidos e vendedores.
-- **Controle de estoque automático**: ao adicionar um produto a um pedido, a baixa no estoque é feita de forma transacional (`@Transactional`); estoque insuficiente retorna **409 Conflict**.
+- **Controle de estoque automático**: ao adicionar um produto a um pedido, a baixa no estoque é transacional (`@Transactional`) e protegida contra concorrência com **lock pessimista** (evita venda de estoque indisponível em requisições simultâneas); estoque insuficiente retorna **409 Conflict**.
 - **Pedidos** com itens, cálculo de subtotal por item e total do pedido.
 - **Migrations versionadas** com Flyway (schema controlado e reproduzível).
 - **Documentação interativa** da API via Swagger/OpenAPI.
 - **Tratamento global de exceções** com respostas HTTP padronizadas.
+- **Integração contínua (CI)** com GitHub Actions: build e testes rodam automaticamente a cada push e pull request.
 
 ---
 
@@ -111,7 +114,6 @@ O front-end foi redesenhado com um **design system próprio** (Tailwind CSS), co
 ## 🗺️ Próximos passos
 
 - 📄 Paginação e filtros nos endpoints de listagem.
-- 🤖 CI com GitHub Actions rodando os testes automaticamente.
 - 📊 Relatórios de vendas e estoque.
 
 ---
@@ -141,7 +143,7 @@ Pré-requisitos: [Java 17+](https://www.oracle.com/java/), [Maven](https://maven
 
 4. Acesse o Swagger: http://localhost:8080/swagger-ui/index.html
 
-> Para produção, defina a variável de ambiente **`JWT_SECRET`** (string de 32+ caracteres) usada na assinatura dos tokens.
+> Para produção, defina a variável **`JWT_SECRET`** (32+ caracteres) — **obrigatória**: sem ela a aplicação não inicia. No perfil `local` não é preciso (há um fallback de dev).
 
 ---
 
@@ -151,7 +153,7 @@ Pré-requisitos: [Java 17+](https://www.oracle.com/java/), [Maven](https://maven
 ./mvnw test
 ```
 
-Cobertura de testes unitários nos **services** (regras de negócio) e nos **controllers** (via MockMvc).
+Cobertura de testes unitários nos **services** (regras de negócio) e nos **controllers** (via MockMvc). Os testes também rodam automaticamente no **CI (GitHub Actions)** a cada push e pull request.
 
 ---
 
