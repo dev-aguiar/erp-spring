@@ -46,7 +46,7 @@ class ItemPedidoControllerTest {
 
         @Test
         void createItemPedido_Success() throws Exception {
-                ItemPedidoRequestDTO request = new ItemPedidoRequestDTO(1L, 2L, 5, BigDecimal.valueOf(50.00));
+                ItemPedidoRequestDTO request = new ItemPedidoRequestDTO(1L, 2L, 5);
 
                 ItemPedidoResponseDTO response = new ItemPedidoResponseDTO(1L, 2L, 5, BigDecimal.valueOf(50.00));
                 when(itemPedidoService.createItemPedido(eq(1L), any(ItemPedidoRequestDTO.class)))
@@ -63,7 +63,7 @@ class ItemPedidoControllerTest {
 
         @Test
         void createItemPedido_InvalidData_ReturnsBadRequest() throws Exception {
-                ItemPedidoRequestDTO invalid = new ItemPedidoRequestDTO(null, null, -1, BigDecimal.valueOf(-5.00));
+                ItemPedidoRequestDTO invalid = new ItemPedidoRequestDTO(null, null, -1);
 
                 mockMvc.perform(post("/pedidos/1/itens")
                                 .contentType(MediaType.APPLICATION_JSON)
