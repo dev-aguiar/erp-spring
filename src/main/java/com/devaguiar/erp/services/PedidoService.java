@@ -60,7 +60,7 @@ public class PedidoService {
     public void adicionarProdutoAoPedido(AdicionarProdutoPedidoRequestDTO data) {
         Pedido pedido = pedidoRepository.findById(data.pedidoId())
                 .orElseThrow(() -> new ResourceNotFoundException("Pedido não encontrado"));
-        Produto produto = produtoRepository.findById(data.produtoId())
+        Produto produto = produtoRepository.findByIdForUpdate(data.produtoId())
                 .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado"));
 
         produto.darBaixaNoEstoque(data.quantidade());
