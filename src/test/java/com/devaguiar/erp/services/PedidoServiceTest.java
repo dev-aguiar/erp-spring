@@ -152,7 +152,7 @@ class PedidoServiceTest {
                 new AdicionarProdutoPedidoRequestDTO(1L, 2L, 3);
 
         when(pedidoRepository.findById(1L)).thenReturn(Optional.of(pedido));
-        when(produtoRepository.findById(2L)).thenReturn(Optional.of(produto));
+        when(produtoRepository.findByIdForUpdate(2L)).thenReturn(Optional.of(produto));
 
         pedidoService.adicionarProdutoAoPedido(request);
         assertEquals(7, produto.getQuantidade());
@@ -179,7 +179,7 @@ class PedidoServiceTest {
         produto.setId(2L); produto.setPreco(BigDecimal.valueOf(50.00)); produto.setQuantidade(2);
         AdicionarProdutoPedidoRequestDTO request = new AdicionarProdutoPedidoRequestDTO(1L, 2L, 3);
         when(pedidoRepository.findById(1L)).thenReturn(Optional.of(pedido));
-        when(produtoRepository.findById(2L)).thenReturn(Optional.of(produto));
+        when(produtoRepository.findByIdForUpdate(2L)).thenReturn(Optional.of(produto));
         assertThrows(EstoqueInsuficienteException.class,
                 () -> pedidoService.adicionarProdutoAoPedido(request));
         verify(itemPedidoRepository, never()).save(any());

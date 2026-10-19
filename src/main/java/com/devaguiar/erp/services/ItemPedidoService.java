@@ -33,7 +33,7 @@ public class ItemPedidoService {
         Pedido pedido = pedidoRepository.findById(pedidoId)
                 .orElseThrow(() -> new ResourceNotFoundException("Pedido não encontrado"));
 
-        Produto produto = produtoRepository.findById(data.produtoId())
+        Produto produto = produtoRepository.findByIdForUpdate(data.produtoId())
                 .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado"));
 
         produto.darBaixaNoEstoque(data.quantidade());
@@ -42,7 +42,7 @@ public class ItemPedidoService {
         itemPedido.setPedido(pedido);
         itemPedido.setProduto(produto);
         itemPedido.setQuantidade(data.quantidade());
-        itemPedido.setValorUnitario(data.valorUnitario());
+        itemPedido.setValorUnitario(produto.getPreco());
 
         itemPedidoRepository.save(itemPedido);
         produtoRepository.save(produto);
